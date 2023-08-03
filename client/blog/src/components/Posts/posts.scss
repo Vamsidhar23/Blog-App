@@ -1,0 +1,6 @@
+.posts{
+    flex: 9;
+    display: flex;
+    flex-wrap: wrap; // Flex items are allowed to wrap onto multiple lines if they don't fit in a single line. 
+    margin: 20px;
+}
