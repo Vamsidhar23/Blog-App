@@ -76,15 +76,15 @@ router.get('/', async (req, res) => {
     // Extract query parameters from the request
     const username = req.query.user; // Extract the 'user' query parameter
     const categoryName = req.query.catName; // Extract the 'catName' query parameter
-
+    //  console.log(categoryName );
     try {
-        let posts; // Declare a variable to store the fetched posts
+        var posts; // Declare a variable to store the fetched posts
         if(username) {
             // Fetch posts associated with a specific username
-            posts = await Post.findOne({ username: username }); 
+            posts = await Post.find({ username: username }); 
         } else if(categoryName) {
             // Fetch posts that belong to a specific category
-            posts = await Post.findOne({
+            posts = await Post.find({
                 categories: {
                     $in: [categoryName],  // Using "$in" to match posts in the provided category
                 },

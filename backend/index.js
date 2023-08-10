@@ -7,12 +7,18 @@ const usersRoute = require('./routes/users'); // Import users route
 const postsRoute = require('./routes/posts'); // Import posts route
 const categoriesRoute = require('./routes/categories'); // Import categories route
 const multer = require('multer'); // Import Multer for file uploads
+const path = require('path');
+const cors = require('cors');
 
 config(); // Load environment variables from .env file
 
 const app = express(); 
 
+app.use(cors());
+
 app.use(express.json()); // Use the built-in middleware to parse JSON requests
+
+app.use("/images", express.static(path.join(__dirname,'/images' ))) //serve static files, specifically images, from a designated directory. 
 
 // Connection to MongoDB
 mongoose.connect(process.env.mongodb_url, {
@@ -30,7 +36,7 @@ const storage = multer.diskStorage({
         cb(null, "images"); // Specify the destination directory for uploaded files
     },
     filename: (req, file, cb) =>{
-        cb(null, "hello.jpg"); // Specify the filename for uploaded files
+        cb(null, req.body.name); // Specify the filename for uploaded files
     }
 });
 

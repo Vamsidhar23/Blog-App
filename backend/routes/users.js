@@ -30,11 +30,19 @@ router.put('/:id', async (req, res) => {
 
 // Route for deleting a user's account
 router.delete('/:id', async (req, res) => {
+    // console.log("req.body.userId:", req.body.userId);
+    // console.log("req.params.id:", req.params.id);
+    req.body.userId = req.params.id;
     // Check if the user ID in the request body matches the ID in the route parameter
     if (req.body.userId === req.params.id) {
         try {
             // Find the user by ID
-            const user = Post.findById(req.params.id);
+            const user = await User.findById(req.params.id); // <-- Add "await" here
+            
+            if (!user) {
+                return res.status(404).json("User not found");
+            }
+
             try {
                 // Delete all posts associated with the user's username
                 await Post.deleteMany({ username: user.username });
@@ -45,12 +53,12 @@ router.delete('/:id', async (req, res) => {
                 res.status(500).json(err); // Handle server error
             }
         } catch (err) {
-            res.status(404).json(err); // Handle user not found error
+            res.status(500).json(err); // Handle server error
         }
-     } else {
-         res.status(401).json("You can only delete your own account"); // Unauthorized action
-     } 
- });
+    } else {
+        res.status(401).json("You can only delete your own account"); // Unauthorized action
+    } 
+});
 
 // Route for fetching a single user's information
 router.get('/:id', async (req, res) => {
